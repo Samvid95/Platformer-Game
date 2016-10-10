@@ -20,30 +20,34 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () {
        
         moveVelocity = 0;
-        if (Input.GetKey(KeyCode.RightArrow))
+        if(shieldScript.ShieldVisible == false)
         {
-            moveVelocity += movementSpeed;
-            direction.x = 1.0f;
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                moveVelocity += movementSpeed;
+                direction.x = 1.0f;
+            }
+
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                moveVelocity -= movementSpeed;
+                direction.x = -1.0f;
+
+            }
+
+            GetComponent<Rigidbody2D>().velocity = new Vector2(moveVelocity, GetComponent<Rigidbody2D>().velocity.y);
+
+            if (Input.GetKey(KeyCode.Space) && grounded)
+            {
+                GetComponent<Rigidbody2D>().velocity = new Vector3(GetComponent<Rigidbody2D>().velocity.x, jumpSpeed, 0);
+            }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                Fire();
+            }
         }
-
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            moveVelocity -= movementSpeed;
-            direction.x = -1.0f;
-
-        }
-
-        GetComponent<Rigidbody2D>().velocity = new Vector2(moveVelocity, GetComponent<Rigidbody2D>().velocity.y);
-
-        if (Input.GetKey(KeyCode.Space) && grounded)
-        {
-            GetComponent<Rigidbody2D>().velocity = new Vector3(GetComponent<Rigidbody2D>().velocity.x, jumpSpeed, 0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Fire();
-        }
+        
 
     }
 
