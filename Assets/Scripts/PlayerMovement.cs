@@ -11,9 +11,13 @@ public class PlayerMovement : MonoBehaviour {
     private float moveVelocity;
     private bool grounded;
     private Vector2 direction;
+
+   
+    Vector3 screenSize;
 	// Use this for initialization
 	void Start () {
         direction = new Vector2(1.0f, 0.0f);
+        screenSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
 	}
 	
 	// Update is called once per frame
@@ -26,15 +30,17 @@ public class PlayerMovement : MonoBehaviour {
             {
                 moveVelocity += movementSpeed;
                 direction.x = 1.0f;
+                GetComponent<Animator>().SetBool("moveRight", true);
             }
 
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 moveVelocity -= movementSpeed;
                 direction.x = -1.0f;
-
+                GetComponent<Animator>().SetBool("moveRight", false);
             }
-
+            
+           
             GetComponent<Rigidbody2D>().velocity = new Vector2(moveVelocity, GetComponent<Rigidbody2D>().velocity.y);
 
             if (Input.GetKey(KeyCode.Space) && grounded)
@@ -44,25 +50,37 @@ public class PlayerMovement : MonoBehaviour {
 
             if (Input.GetKeyDown(KeyCode.X))
             {
+               
                 Fire();
+               
             }
         }
-        
+        Debug.Log("Grounded value: "+grounded);
 
     }
 
     void Fire()
     {
         GameObject bullet1;
-        bullet1 = Instantiate(bullet, transform.position, Quaternion.identity) as GameObject;
+        bullet1 = Instantiate(bullet, new Vector3(transform.position.x + direction.x,transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
         bullet1.GetComponent<Rigidbody2D>().velocity = new Vector3(bulletSpeed * direction.x, 0, 0);
+       
     }
-    void OnTriggerEnter2D()
+
+    void OnCollisionEnter2D(Collision2D col)
     {
-        grounded = true;
+        if(col.gameObject.tag == "Ground")
+        {
+            grounded = true;
+        }
+        
     }
-    void OnTriggerExit2D()
+    
+    void OnCollisionExit2D(Collision2D col)
     {
-        grounded = false;
+        if (col.gameObject.tag == "Ground")
+        {
+            grounded = false;
+        }
     }
 }
