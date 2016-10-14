@@ -5,6 +5,7 @@ public class EnemyScript1 : MonoBehaviour {
 
     public float moveVelocity;
     public float Health;
+    public LevelManager levelManager;
 	// Use this for initialization
 	void Start () {
 	
@@ -28,6 +29,8 @@ public class EnemyScript1 : MonoBehaviour {
         if(coll.gameObject.tag == "Player")
         {
             Destroy(coll.gameObject);
+            levelManager.LoadLevel("Start");
+            
         }
     }
 

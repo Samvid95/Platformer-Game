@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public GameObject bullet;
     public float bulletSpeed;
+    public LevelManager levelManager;
 
     private float moveVelocity;
     private bool grounded;
@@ -26,18 +27,20 @@ public class PlayerMovement : MonoBehaviour {
         moveVelocity = 0;
         if(shieldScript.ShieldVisible == false)
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.R))
             {
+                GetComponent<Animator>().SetBool("moveRight", true);
                 moveVelocity += movementSpeed;
                 direction.x = 1.0f;
-                GetComponent<Animator>().SetBool("moveRight", true);
+                
             }
 
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.L))
             {
+                GetComponent<Animator>().SetBool("moveRight", false);
                 moveVelocity -= movementSpeed;
                 direction.x = -1.0f;
-                GetComponent<Animator>().SetBool("moveRight", false);
+                
             }
             
            
@@ -73,7 +76,13 @@ public class PlayerMovement : MonoBehaviour {
         {
             grounded = true;
         }
-        
+        if (col.gameObject.tag == "Hit")
+        {
+            Destroy(gameObject);
+            levelManager.LoadLevel("Start");
+            
+        }
+
     }
     
     void OnCollisionExit2D(Collision2D col)
